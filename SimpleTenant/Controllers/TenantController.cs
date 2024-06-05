@@ -41,7 +41,7 @@ namespace SimpleTenant.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Tenant>> Put(Tenant tenant)
+        public async Task<ActionResult<Tenant>> Put(TenantPutDto tenant)
         {
             var ret = await _tenantService.UpdateTenant(tenant);
 

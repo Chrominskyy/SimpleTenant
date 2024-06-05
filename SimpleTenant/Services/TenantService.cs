@@ -9,12 +9,15 @@ public class TenantService : ITenantService
 {
     private readonly ITenantRepository _tenantRepository;
     private readonly IBaseMapper<Tenant, TenantPostDto> _tenantPostDtoTenantMapper;
+    private readonly IBaseMapper<Tenant, TenantPutDto> _tenantPutDtoTenantMapper;
     
     public TenantService(ITenantRepository tenantRepository, IBaseMapper<
-        Tenant, TenantPostDto> tenantPostDtoTenantMapper)
+        Tenant, TenantPostDto> tenantPostDtoTenantMapper, IBaseMapper<
+        Tenant, TenantPutDto> tenantPutDtoTenantMapper)
     {
         _tenantRepository = tenantRepository;
         _tenantPostDtoTenantMapper = tenantPostDtoTenantMapper;
+        _tenantPutDtoTenantMapper = tenantPutDtoTenantMapper;
     }
     
     public async Task<Guid> CreateTenant(TenantPostDto tenant)
@@ -30,12 +33,13 @@ public class TenantService : ITenantService
 
     public async Task<IEnumerable<Tenant>> GetAllTenants()
     {
-        throw new NotImplementedException();
+        return await _tenantRepository.GetAllAsync<Tenant>();
     }
 
-    public async Task<Tenant> UpdateTenant(Tenant tenant)
+    public async Task<Tenant> UpdateTenant(TenantPutDto tenant)
     {
-        return await _tenantRepository.UpdateAsync<Tenant>(tenant);
+        var tenantDto = _tenantPutDtoTenantMapper.ToEntity(tenant);
+        return await _tenantRepository.UpdateAsync<Tenant>(tenantDto);
     }
 
     public async Task<bool> DeleteTenant(Guid tenantId)

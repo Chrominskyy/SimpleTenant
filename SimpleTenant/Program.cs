@@ -1,6 +1,10 @@
+using Chrominsky.Utils.Mappers.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SimpleTenant.Contexts;
+using SimpleTenant.Mappers.Tenant;
+using SimpleTenant.Models;
+using SimpleTenant.Models.Dto;
 using SimpleTenant.Repositories;
 using SimpleTenant.Services;
 using StackExchange.Redis;
@@ -35,6 +39,8 @@ public class Program
         });
         builder.Services.AddScoped<ITenantService, TenantService>();
         builder.Services.AddScoped<ITenantRepository, TenantRepository>();
+        builder.Services.AddScoped<IBaseMapper<Tenant, TenantPostDto>, TenantPostDtoTenantMapper>();
+        builder.Services.AddScoped<IBaseMapper<Tenant, TenantPutDto>, TenantPutDtoTenantMapper>();
 
         var app = builder.Build();
         

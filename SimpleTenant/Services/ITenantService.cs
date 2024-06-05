@@ -32,7 +32,7 @@ public interface ITenantService
     /// </summary>
     /// <param name="tenant">The tenant object to be updated.</param>
     /// <returns>The updated tenant object.</returns>
-    Task<Tenant> UpdateTenant(Tenant tenant);
+    Task<Tenant> UpdateTenant(TenantPutDto tenant);
 
     /// <summary>
     /// Deletes a tenant by its unique identifier.

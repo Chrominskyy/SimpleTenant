@@ -1,0 +1,43 @@
+﻿@using Chrominsky.Utils.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1>Tenant List</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var tenant in Model.Tenants)
+        {
+        <tr>
+            <td>@tenant.Id</td>
+            <td>@tenant.TenantName</td>
+            <td>@tenant.Status</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@tenant.Id" class="btn btn-primary">Edit</a>
+                <a asp-action="Remove" asp-route-id="@tenant.Id" class="btn btn-danger">Remove</a>
+                @if (tenant.Status == DatabaseEntityStatus.Active)
+                {
+                <a asp-action="Disable" asp-route-id="@tenant.Id" class="btn btn-warning">Disable</a>
+                }
+                else
+                {
+                <a asp-action="Enable" asp-route-id="@tenant.Id" class="btn btn-success">Enable</a>
+                }
+            </td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>

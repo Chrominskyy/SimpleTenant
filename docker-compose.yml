@@ -1,0 +1,6 @@
+﻿services:
+  simpletenant.web:
+    image: simpletenant.web
+    build:
+      context: .
+      dockerfile: SimpleTenant.Web/Dockerfile

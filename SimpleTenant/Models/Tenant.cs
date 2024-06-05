@@ -15,5 +15,5 @@ public class Tenant : BaseDatabaseEntity
     /// Name of the tenant.
     /// </summary>
     [Required]
-    public required string TenantName { get; set; }
+    public required string? TenantName { get; set; }
 }
