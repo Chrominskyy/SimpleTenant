@@ -80,31 +80,25 @@ public class TenantService : ITenantService
         return response.Id == tenant.Id;
     }
 
-    public async Task<IEnumerable<Tenant>> SearchTenantAsync(string searchTerm)
+    public async Task<IEnumerable<Tenant>> SearchTenantAsync(SearchTenantRequestDto request)
     {
-        var searchTenantRequestDto = new SearchTenantRequestDto()
-        {
-            TenantName = searchTerm,
-            Page = 1,
-            PageSize = 10000
-        };
 
-        var searchrRequest = new SearchParameterRequest()
+        var searchRequest = new SearchParameterRequest()
         {
-            Page = searchTenantRequestDto.Page,
-            PageSize = searchTenantRequestDto.PageSize,
+            Page = request.Page,
+            PageSize = request.PageSize,
             SearchParameters = new List<SearchParameter>()
             {
                 new()
                 {
                     Key = "TenantName",
-                    Value = searchTenantRequestDto.TenantName,
-                    Operator = SearchOperator.Contains
+                    Value = request.TenantName,
+                    Operator = request.SearchOperator
                 }
             }
         };
         
-        var response = await _tenantApiClient.PostAsync<IEnumerable<Tenant>, SearchParameterRequest>("/api/tenants/search", searchrRequest);
+        var response = await _tenantApiClient.PostAsync<IEnumerable<Tenant>, SearchParameterRequest>("/api/tenants/search", searchRequest);
         return response;
     }
 }

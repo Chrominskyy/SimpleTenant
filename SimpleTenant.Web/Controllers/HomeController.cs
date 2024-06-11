@@ -1,6 +1,7 @@
 using System.Diagnostics;
+using System.Text.Json;
+using Chrominsky.Utils.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SimpleTenant.Models;
 using SimpleTenant.Models.Dto;
 using SimpleTenant.Web.Services;
@@ -19,10 +20,35 @@ public class HomeController : Controller
         _tenantService = tenantService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(IndexViewModel model)
     {
-        var tenants = await _tenantService.GetTenantsAsync();
-        var model = new IndexViewModel { Tenants = tenants };
+        if (TempData.TryGetValue("SearchTenants", out object? value))
+        {
+            model.Tenants = JsonSerializer.Deserialize<List<Tenant>>(value.ToString());
+            TempData.Remove("SearchTenants");
+        }
+
+        if (TempData.TryGetValue("SearchTenantName", out value))
+        {
+            model.SearchTerm = value.ToString();
+            TempData.Remove("SearchTenantName");
+        }
+
+        if (TempData.TryGetValue("SearchOperator", out value))
+        {
+            model.SearchOperator = (SearchOperator)Enum.Parse(typeof(SearchOperator), value.ToString());
+            TempData.Remove("SearchOperator");
+        }
+        
+        if (model.Tenants == null || (!model.Tenants.Any() && string.IsNullOrEmpty(model.SearchTerm)))
+        {
+            var tenants = await _tenantService.GetTenantsAsync();
+            model = new IndexViewModel { Tenants = tenants };
+        }
+
+        model.SearchOperator ??= SearchOperator.Contains;
+        
+        
         return View(model);
     }
 
@@ -93,15 +119,20 @@ public class HomeController : Controller
 
         return View("Tenant");
     }
-
-    public async Task<IActionResult> SearchTenant(string searchTerm)
+    
+    public async Task<IActionResult> SearchTenant(IndexViewModel model)
     {
-        var viewModel = new IndexViewModel()
+        model.Tenants = await _tenantService.SearchTenantAsync(new SearchTenantRequestDto()
         {
-            SearchTerm = searchTerm,
-            Tenants = await _tenantService.SearchTenantAsync(searchTerm)
-        };
-        
-        return View("Index", viewModel);
+            Page = 1,
+            PageSize = 10000,
+            TenantName = model.SearchTerm,
+            SearchOperator = model.SearchOperator??SearchOperator.Contains
+        });
+
+        TempData["SearchTenants"] = JsonSerializer.Serialize(model.Tenants);
+        TempData["SearchTenantName"] = model.SearchTerm;
+        TempData["SearchOperator"] = model.SearchOperator;
+        return RedirectToAction(nameof(Index));
     }
 }

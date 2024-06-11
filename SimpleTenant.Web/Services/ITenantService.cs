@@ -22,5 +22,5 @@ public interface ITenantService
     public Task<bool> AddTenantAsync(Tenant tenant);
     
     public Task<bool> EditTenantAsync(Tenant tenant);
-    Task<IEnumerable<Tenant>> SearchTenantAsync(string searchTerm);
+    Task<IEnumerable<Tenant>> SearchTenantAsync(SearchTenantRequestDto request);
 }

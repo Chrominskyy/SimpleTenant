@@ -61,7 +61,10 @@ else
     }
 
     <button type="submit" class="btn btn-primary">Save</button>
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#removeModal">Remove</button>
+    @if (Model.Id != Guid.Empty)
+    {
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#removeModal">Remove</button>
+    }
     <button type="submit" asp-action="Index" class="btn btn-secondary">Cancel</button>
 </form>
 
