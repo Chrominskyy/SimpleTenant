@@ -1,3 +1,7 @@
+using Chrominsky.Utils.Mappers.Base;
+using SimpleTenant.Mappers.Tenant;
+using SimpleTenant.Models;
+using SimpleTenant.Models.Dto;
 using SimpleTenant.Web.Services;
 using SimpleTenant.Web.Clients;
 
@@ -14,6 +18,8 @@ public class Program
         
         builder.Services.AddScoped<ITenantService, TenantService>();
         builder.Services.AddScoped<IApiClient, TenantApiClient>();
+        builder.Services.AddScoped<IBaseMapper<Tenant, TenantPostDto>, TenantPostDtoTenantMapper>();
+        builder.Services.AddScoped<IBaseMapper<Tenant, TenantPutDto>, TenantPutDtoTenantMapper>();
 
         var app = builder.Build();
 

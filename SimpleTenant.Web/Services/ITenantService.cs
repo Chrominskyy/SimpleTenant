@@ -13,9 +13,14 @@ public interface ITenantService
     
     public Task<Tenant> PutTenantAsync(TenantPutDto tenant);
     
-    public Task<Tenant> DeleteTenantAsync(Guid id);
+    public Task<bool> DeleteTenantAsync(Guid id);
 
     public Task<bool> DeactivateTenantAsync(Guid id);
     
     public Task<bool> ActivateTenantAsync(Guid id);
+    
+    public Task<bool> AddTenantAsync(Tenant tenant);
+    
+    public Task<bool> EditTenantAsync(Tenant tenant);
+    Task<IEnumerable<Tenant>> SearchTenantAsync(string searchTerm);
 }

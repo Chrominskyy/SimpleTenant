@@ -7,7 +7,14 @@ public class TenantPutDtoTenantMapper: IBaseMapper<Models.Tenant, TenantPutDto>
 {
     public TenantPutDto ToDto(Models.Tenant entity)
     {
-        throw new NotImplementedException();
+        return new TenantPutDto()
+        {
+            Id = entity.Id,
+            TenantName = entity.TenantName,
+            Status = entity.Status,
+            UpdatedAt = entity.UpdatedAt,
+            UpdatedBy = entity.UpdatedBy,
+        };
     }
 
     public Models.Tenant ToEntity(TenantPutDto dto)

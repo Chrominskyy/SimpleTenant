@@ -20,3 +20,23 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.search-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.input-group {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.custom-select-width {
+  width: auto;
+  min-width: 150px; /* Adjust as necessary */
+}

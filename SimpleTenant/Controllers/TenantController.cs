@@ -1,3 +1,4 @@
+using Chrominsky.Utils.Models;
 using Microsoft.AspNetCore.Mvc;
 using SimpleTenant.Models;
 using SimpleTenant.Models.Dto;
@@ -57,6 +58,12 @@ namespace SimpleTenant.Controllers
                 return NotFound();
             }
             return NoContent();
+        }
+        
+        [HttpPost("search")]
+        public async Task<ActionResult<IEnumerable<Tenant>>> Search([FromBody] SearchParameterRequest searchRequest)
+        {
+            return Ok(await _tenantService.SearchAsync(searchRequest));
         }
     }
 }

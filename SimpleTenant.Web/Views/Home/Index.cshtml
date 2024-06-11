@@ -8,6 +8,19 @@
 <div class="text-center">
     <h1>Tenant List</h1>
 
+    <form method="post" asp-action="SearchTenant" asp-route-id="@Model.SearchTerm" class="search-form">
+        <div class="input-group mb-3">
+            <input asp-for="SearchTerm" type="text" name="searchTerm" placeholder="Search by Name" class="form-control">
+            <select class="form-select form-select-sm custom-select-width" name="searchOption">
+                <option value="exact">Exact match</option>
+                <option value="contains">Contains</option>
+            </select>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </div>
+    </form>
+
     <table class="table">
         <thead>
         <tr>

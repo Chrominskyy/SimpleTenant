@@ -1,4 +1,6 @@
 using Chrominsky.Utils.Enums;
+using Chrominsky.Utils.Mappers.Base;
+using Chrominsky.Utils.Models;
 using SimpleTenant.Models;
 using SimpleTenant.Models.Dto;
 using SimpleTenant.Web.Clients;
@@ -8,10 +10,19 @@ namespace SimpleTenant.Web.Services;
 public class TenantService : ITenantService
 {
     private readonly IApiClient _tenantApiClient;
+    private readonly IBaseMapper<Tenant, TenantPostDto> _tenantPostDtoTenantMapper;
+    private readonly IBaseMapper<Tenant, TenantPutDto> _tenantPutDtoTenantMapper;
 
-    public TenantService(IApiClient tenantApiClient)
+    public TenantService
+        (
+            IApiClient tenantApiClient,
+            IBaseMapper<Tenant, TenantPostDto> tenantPostDtoTenantMapper,
+            IBaseMapper<Tenant, TenantPutDto> tenantPutDtoTenant
+        )
     {
         _tenantApiClient = tenantApiClient;
+        _tenantPostDtoTenantMapper = tenantPostDtoTenantMapper;
+        _tenantPutDtoTenantMapper = tenantPutDtoTenant;
     }
     
     public async Task<IEnumerable<Tenant>> GetTenantsAsync()
@@ -28,17 +39,17 @@ public class TenantService : ITenantService
 
     public async Task<Tenant> PostTenantAsync(TenantPostDto tenant)
     {
-        throw new NotImplementedException();
+        return await _tenantApiClient.PostAsync<Tenant, TenantPostDto>("/api/tenants", tenant);
     }
 
     public async Task<Tenant> PutTenantAsync(TenantPutDto tenant)
     {
-        throw new NotImplementedException();
+        return await _tenantApiClient.PutAsync<Tenant, TenantPutDto>("/api/tenants", tenant);
     }
 
-    public async Task<Tenant> DeleteTenantAsync(Guid id)
+    public async Task<bool> DeleteTenantAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _tenantApiClient.DeleteAsync($"/api/tenants/{id}");
     }
 
     public async Task<bool> DeactivateTenantAsync(Guid id)
@@ -53,5 +64,47 @@ public class TenantService : ITenantService
         var tenantPutDto = new TenantPutDto { Id = id, Status = DatabaseEntityStatus.Active, UpdatedBy = "TestUser" };
         var response = await _tenantApiClient.PutAsync<Tenant, TenantPutDto>("/api/tenants", tenantPutDto);
         return response.Id == id;
+    }
+
+    public async Task<bool> AddTenantAsync(Tenant tenant)
+    {
+        var tenantPostDto = _tenantPostDtoTenantMapper.ToDto(tenant);
+        var response = await PostTenantAsync(tenantPostDto);
+        return response.Id != Guid.Empty;
+    }
+
+    public async Task<bool> EditTenantAsync(Tenant tenant)
+    {
+        var dto = _tenantPutDtoTenantMapper.ToDto(tenant);
+        var response = await PutTenantAsync(dto);
+        return response.Id == tenant.Id;
+    }
+
+    public async Task<IEnumerable<Tenant>> SearchTenantAsync(string searchTerm)
+    {
+        var searchTenantRequestDto = new SearchTenantRequestDto()
+        {
+            TenantName = searchTerm,
+            Page = 1,
+            PageSize = 10000
+        };
+
+        var searchrRequest = new SearchParameterRequest()
+        {
+            Page = searchTenantRequestDto.Page,
+            PageSize = searchTenantRequestDto.PageSize,
+            SearchParameters = new List<SearchParameter>()
+            {
+                new()
+                {
+                    Key = "TenantName",
+                    Value = searchTenantRequestDto.TenantName,
+                    Operator = SearchOperator.Contains
+                }
+            }
+        };
+        
+        var response = await _tenantApiClient.PostAsync<IEnumerable<Tenant>, SearchParameterRequest>("/api/tenants/search", searchrRequest);
+        return response;
     }
 }

@@ -1,4 +1,5 @@
 using Chrominsky.Utils.Mappers.Base;
+using Chrominsky.Utils.Models;
 using SimpleTenant.Models;
 using SimpleTenant.Models.Dto;
 using SimpleTenant.Repositories;
@@ -45,5 +46,10 @@ public class TenantService : ITenantService
     public async Task<bool> DeleteTenant(Guid tenantId)
     {
         return await _tenantRepository.DeleteAsync<Tenant>(tenantId);
+    }
+
+    public async Task<IEnumerable<Tenant>> SearchAsync(SearchParameterRequest searchRequest)
+    {
+        return await _tenantRepository.SearchAsync<Tenant>(searchRequest);
     }
 }

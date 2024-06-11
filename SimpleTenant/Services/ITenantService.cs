@@ -1,3 +1,4 @@
+using Chrominsky.Utils.Models;
 using SimpleTenant.Models;
 using SimpleTenant.Models.Dto;
 
@@ -39,4 +40,6 @@ public interface ITenantService
     /// </summary>
     /// <param name="tenantId">The unique identifier of the tenant.</param>
     Task<bool> DeleteTenant(Guid tenantId);
+    
+    Task<IEnumerable<Tenant>> SearchAsync(SearchParameterRequest searchRequest);
 }

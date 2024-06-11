@@ -1,5 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SimpleTenant.Models;
+using SimpleTenant.Models.Dto;
 using SimpleTenant.Web.Services;
 using SimpleTenant.Web.Models;
 
@@ -70,7 +73,35 @@ public class HomeController : Controller
 
     public IActionResult AddNew()
     {
-        var viewModel = new EditTenantViewModel(){Id = Guid.Empty};
+        var viewModel = new EditTenantViewModel()
+        {
+            Id = Guid.Empty
+        };
         return View("Tenant", viewModel);
+    }
+
+    public async Task<IActionResult> AddEditTenant(Tenant tenant)
+    {
+        if (ModelState.IsValid)
+        {
+            if (tenant.Id == Guid.Empty)
+                await _tenantService.AddTenantAsync(tenant);
+            else
+                await _tenantService.EditTenantAsync(tenant);
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View("Tenant");
+    }
+
+    public async Task<IActionResult> SearchTenant(string searchTerm)
+    {
+        var viewModel = new IndexViewModel()
+        {
+            SearchTerm = searchTerm,
+            Tenants = await _tenantService.SearchTenantAsync(searchTerm)
+        };
+        
+        return View("Index", viewModel);
     }
 }
