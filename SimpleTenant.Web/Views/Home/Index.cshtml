@@ -1,5 +1,6 @@
 ﻿@using Chrominsky.Utils.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.EntityFrameworkCore
 @model IndexViewModel
 @{
     ViewData["Title"] = "Home Page";
@@ -18,7 +19,6 @@
     <div class="container">
         <div class="row">
             <div class="d-flex justify-content-between align-items-center mb-3">
-
                 <div class="col-md-11">
                     <form method="post" asp-action="SearchTenant" class="search-form d-flex">
                         <div class="input-group mb-3 mr-2">
@@ -42,23 +42,23 @@
         </div>
     </div>
 
-    <table class="table">
+    <table class="container text-center table">
         <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Actions</th>
+        <tr class="row">
+            <th class="col-4">Id</th>
+            <th class="col-4">Name</th>
+            <th class="col-1">Status</th>
+            <th class="col-3">Actions</th>
         </tr>
         </thead>
         <tbody>
         @foreach (var tenant in Model.Tenants)
         {
-            <tr>
-                <td>@tenant.Id</td>
-                <td>@tenant.TenantName</td>
-                <td>@tenant.Status</td>
-                <td>
+            <tr class="row">
+                <td class="col-4">@tenant.Id</td>
+                <td class="col-4">@tenant.TenantName</td>
+                <td class="col-1">@tenant.Status</td>
+                <td class="col-3 text-right">
                     <div class="btn-group" role="group" aria-label="Default button group">
                         <a asp-action="Edit" asp-route-id="@tenant.Id" class="btn btn-outline-primary">
                             <i class="bi bi-pencil-square"></i>
@@ -88,4 +88,42 @@
         }
         </tbody>
     </table>
+    <div class="container">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <div class="text-right">
+                    <ul class="pagination">
+                        @if (Model.Page > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Page - 1)">Previous</a>
+                            </li>
+                        }
+                        @for (var i = 1; i <= Model.TotalPages; i++)
+                        {
+                            if (i == Model.Page)
+                            {
+                                <li class="page-item active">
+                                    <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@i">@i</a></li>
+                            }
+                        }
+                        @if (Model.Page < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Page + 1)">Next</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-auto">
+                Total items: @Model.TotalCount
+            </div>
+        </div>
+    </div>
 </div>

@@ -42,12 +42,17 @@ public class HomeController : Controller
         
         if (model.Tenants == null || (!model.Tenants.Any() && string.IsNullOrEmpty(model.SearchTerm)))
         {
-            var tenants = await _tenantService.GetTenantsAsync();
-            model = new IndexViewModel { Tenants = tenants };
+            var response = await _tenantService.GetPaginatedTenantsAsync(model.Page, model.PageSize);
+            model = new IndexViewModel
+            {
+                Tenants = response.Data,
+                Page = response.Page,
+                PageSize = response.PageSize,
+                TotalCount = response.TotalCount,
+            };
         }
 
         model.SearchOperator ??= SearchOperator.Contains;
-        
         
         return View(model);
     }

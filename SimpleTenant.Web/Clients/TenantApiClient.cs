@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 
 namespace SimpleTenant.Web.Clients
 {
+    /// <inheritdoc/>
     public class TenantApiClient : IApiClient
     {
         private readonly HttpClient _httpClient;
@@ -20,12 +21,14 @@ namespace SimpleTenant.Web.Clients
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        /// <inheritdoc/>
         public async Task<T> GetAsync<T>(string url)
         {
             var response = await _httpClient.GetAsync(url);
             return await response.Content.ReadFromJsonAsync<T>();
         }
 
+        /// <inheritdoc/>
         public async Task<T1> PostAsync<T1, T2>(string url, T2 content)
         {
             var response = await _httpClient.PostAsJsonAsync(url, content, new CancellationToken());
@@ -34,6 +37,7 @@ namespace SimpleTenant.Web.Clients
             return responseData;
         }
 
+        /// <inheritdoc/>
         public async Task<T1> PutAsync<T1, T2>(string url, T2 content)
         {
             var response = await _httpClient.PutAsJsonAsync<T2>(url, content, new CancellationToken());
@@ -42,6 +46,7 @@ namespace SimpleTenant.Web.Clients
             return responseData;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> DeleteAsync(string url)
         {
             var response = await _httpClient.DeleteAsync(url);

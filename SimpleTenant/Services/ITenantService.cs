@@ -41,5 +41,18 @@ public interface ITenantService
     /// <param name="tenantId">The unique identifier of the tenant.</param>
     Task<bool> DeleteTenant(Guid tenantId);
     
+    /// <summary>
+    /// Performs a search operation on tenants based on the provided search parameters.
+    /// </summary>
+    /// <param name="searchRequest">The search parameters to be used for filtering the tenants.</param>
+    /// <returns>An enumerable collection of tenant objects that match the search criteria.</returns>
     Task<IEnumerable<Tenant>> SearchAsync(SearchParameterRequest searchRequest);
+
+    /// <summary>
+    /// Retrieves a paginated list of tenants.
+    /// </summary>
+    /// <param name="page">The page number to retrieve.</param>
+    /// <param name="pageSize">The number of items per page.</param>
+    /// <returns>A PaginatedResponse object containing the requested page of tenant objects.</returns>
+    Task<PaginatedResponse<IEnumerable<Tenant>>> GetPaginatedTenantsAsync(int page, int pageSize);
 }
