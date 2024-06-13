@@ -1,4 +1,5 @@
 using Chrominsky.Utils.Mappers.Base;
+using Chrominsky.Utils.Repositories.ObjectVersioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SimpleTenant.Contexts;
@@ -8,6 +9,7 @@ using SimpleTenant.Models.Dto;
 using SimpleTenant.Repositories;
 using SimpleTenant.Services;
 using StackExchange.Redis;
+using ObjectVersioningRepository = SimpleTenant.Repositories.ObjectVersioningRepository;
 
 namespace SimpleTenant;
 
@@ -41,6 +43,7 @@ public class Program
         builder.Services.AddScoped<ITenantRepository, TenantRepository>();
         builder.Services.AddScoped<IBaseMapper<Tenant, TenantPostDto>, TenantPostDtoTenantMapper>();
         builder.Services.AddScoped<IBaseMapper<Tenant, TenantPutDto>, TenantPutDtoTenantMapper>();
+        builder.Services.AddScoped<IObjectVersioningRepository, ObjectVersioningRepository>();
 
         var app = builder.Build();
         

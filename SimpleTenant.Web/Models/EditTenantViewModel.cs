@@ -1,5 +1,4 @@
 using Chrominsky.Utils.Enums;
-using SimpleTenant.Models;
 
 namespace SimpleTenant.Web.Models;
 

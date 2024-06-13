@@ -9,4 +9,5 @@ public class TenantDbContext : DbContext
     
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<TenantUser> TenantUsers { get; set; }
+    public DbSet<Chrominsky.Utils.Models.Base.ObjectVersion> ObjectVersions { get; set; }
 }
